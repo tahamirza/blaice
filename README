@@ -1,0 +1,16 @@
+Why make a Pascal compiler?
+===========================
+
+- Learn compilation techniques in general
+- Designed to be simple to compile
+- Readily accessible standard with grammar
+- Not a toy language
+- Retro vibes
+
+TODO
+====
+
+- Lexer
+- Parser
+- ???
+- Code Generation
