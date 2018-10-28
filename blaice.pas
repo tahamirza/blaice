@@ -20,6 +20,7 @@ var
 begin
    done := false;
    i := 0;
+   nextToken.text := '';
    while not done do
    begin
       ch := input^;
@@ -40,6 +41,9 @@ begin
 end;
 
 begin
-   getToken;
-   writeln(nextToken.text);
+   while not eof do
+      begin
+         getToken;
+         writeln(nextToken.text);
+      end;
 end .
