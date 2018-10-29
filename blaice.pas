@@ -72,40 +72,79 @@ type
                   text         : string;
                end;
 
-var nextToken : token;
+var
+   nextToken : token;
+   ch        : char;
+
+procedure getChar();
+begin
+   ch := input^;
+   get(input);
+end;
 
 procedure getToken();
+type tstate = (start, readingid);
 var
-   ch   : char;
-   done : boolean;
-   i    : integer;
+   done  : boolean;
+   i     : integer;
+   state : tstate;
+   valid : boolean;
+
 begin
    done := false;
    i := 0;
    nextToken.text := '';
+   state := start;
    while not done do
    begin
-      ch := input^;
-      get(input);
-      
-      case ch of
-        'a'..'z':
-        begin
-           nextToken.name := identifier;
-           nextToken.text[i] := ch;
-        end;
-        {whitespace}
-        ' ',chr(13),chr(10): done := true;
-      end;
+      case state of
+        start:
+              begin
+                 valid := false;
+                 getChar;
+                 case ch of
+                   { identifier }
+                   'a'..'z':
+                   begin
+                      state := readingid;
+                      valid := true;
+                   end;
+                 end;
 
-      i := i + 1;
+                 if not valid then done := true;
+              end;
+        readingid:
+                  begin
+                     valid := false;
+                     case ch of
+                       'a'..'z':
+                     begin
+                        nextToken.name := identifier;
+                        nextToken.text[i] := ch;
+                        i := i + 1;
+                        getChar;
+                        valid := true;
+                     end;
+                       '0'..'9':
+                     begin
+                        nextToken.name := identifier;
+                        nextToken.text[i] := ch;
+                        i := i + 1;
+                        getChar;
+                        valid := true;
+                     end;
+                     end;
+
+                     if not valid then done := true;
+                  end;
+      end;
    end;
 end;
 
 begin
    while not eof do
-      begin
-         getToken;
-         writeln(nextToken.text);
-      end;
+   begin
+      getToken;
+      writeln(nextToken.text);
+   end;
 end .
