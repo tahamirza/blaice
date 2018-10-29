@@ -96,10 +96,10 @@ begin
    state := start;
    while not done do
    begin
+      done := true;
       case state of
         start:
               begin
-                 done := true;
                  getChar;
                  case ch of
                    { identifier }
@@ -117,7 +117,6 @@ begin
               end;
         readingid:
                   begin
-                     done := true;
                      case ch of
 
                        'A'..'Z':
