@@ -88,7 +88,6 @@ var
    done  : boolean;
    i     : integer;
    state : tstate;
-   valid : boolean;
 
 begin
    done := false;
@@ -100,42 +99,41 @@ begin
       case state of
         start:
               begin
-                 valid := false;
+                 done := true;
                  getChar;
                  case ch of
                    { identifier }
                    'a'..'z':
                    begin
                       state := readingid;
-                      valid := true;
+                      done := false;
                    end;
                  end;
-
-                 if not valid then done := true;
               end;
         readingid:
                   begin
-                     valid := false;
+                     done := true;
                      case ch of
+
                        'a'..'z':
                      begin
                         nextToken.name := identifier;
                         nextToken.text[i] := ch;
                         i := i + 1;
                         getChar;
-                        valid := true;
+                        done := false;
                      end;
+
                        '0'..'9':
                      begin
                         nextToken.name := identifier;
                         nextToken.text[i] := ch;
                         i := i + 1;
                         getChar;
-                        valid := true;
-                     end;
+                        done := false;
                      end;
 
-                     if not valid then done := true;
+                     end;
                   end;
       end;
    end;
