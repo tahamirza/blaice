@@ -103,12 +103,7 @@ begin
                  getChar;
                  case ch of
                    { identifier }
-                   'a'..'z':
-                   begin
-                      state := readingid;
-                      done := false;
-                   end;
-                   'A'..'Z':
+                   'a'..'z','A'..'Z':
                    begin
                       state := readingid;
                       done := false;
@@ -119,25 +114,7 @@ begin
                   begin
                      case ch of
 
-                       'A'..'Z':
-                     begin
-                        nextToken.name := identifier;
-                        nextToken.text[i] := ch;
-                        i := i + 1;
-                        getChar;
-                        done := false;
-                     end;
-
-                       'a'..'z':
-                     begin
-                        nextToken.name := identifier;
-                        nextToken.text[i] := ch;
-                        i := i + 1;
-                        getChar;
-                        done := false;
-                     end;
-
-                       '0'..'9':
+                       'A'..'Z','a'..'z','0'..'9':
                      begin
                         nextToken.name := identifier;
                         nextToken.text[i] := ch;
