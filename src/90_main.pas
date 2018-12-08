@@ -1,10 +1,8 @@
 begin
-   ch := input^;
-   get(input);
-   peek := input^;
+   initLexer();
    while not eof do
    begin
-      getToken;
+      getToken();
       writeln(nextToken.text);
    end;
 end .

@@ -1,3 +1,10 @@
+procedure initLexer();
+begin
+   ch := input^;
+   get(input);
+   peek := input^;
+end;
+
 procedure getChar();
 begin
    get(input);
@@ -6,7 +13,7 @@ begin
 end;
 
 procedure getToken();
-type tstate = (start, readingid, skip, finished, failed);
+type tstate = (start, readingid, readingstring, skip, finished, failed);
 var
    done  : boolean;
    i     : integer;
@@ -32,6 +39,13 @@ begin
 		    nextToken.text[i] := ch;
 		    i := i + 1;
 		 end;
+		   
+		   '''':
+		 begin
+		    state := readingstring;
+		    done := false;
+		    nextToken.name := characterstring;
+		 end;
 
 		   '(':
 		 begin
@@ -52,14 +66,6 @@ begin
 		   ';':
 		 begin
 		    nextToken.name := semicolon;
-		    nextToken.text[0] := ch;
-		    state := finished;
-		 end;
-
-		   { todo: reading whole string }
-		   '''':
-		 begin
-		    nextToken.name := characterstring;
 		    nextToken.text[0] := ch;
 		    state := finished;
 		 end;
@@ -108,6 +114,28 @@ begin
 
 		     end;
 		  end;
+
+	readingstring:
+		      begin
+			 getchar;
+			 if ch = '''' then
+			    if peek = '''' then
+			    begin
+			       nextToken.text[i] := '''';
+			       i := i + 1;
+			       getchar;
+			       state:= readingstring;
+			    end
+		            else
+			       state := finished
+		      else
+		      begin
+			 nextToken.text[i] := ch;
+			 i := i + 1;
+			 state := readingstring;
+		      end;
+		      end;
+	
       end;
    end;		      {while}
 end;
