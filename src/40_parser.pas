@@ -1,32 +1,39 @@
-procedure readToken();
+procedure readToken(expected : tokentype);
 begin
    getToken();
+
+   if (nextToken.name <> expected) then
+      {todo: convert 'identifiers' into proper keywords}
+      if (nextToken.name <> identifier) then
+	 writeln('Unexpected token ', nextToken.text);
+
    writeln(nextToken.text);
 end;
 
 procedure identifierList();
 begin
    {todo: read more than one id}
-   readToken(); {identifer}
+   readToken(identifier);
 end;
 
 procedure programHeading();
 begin
-   readToken(); {program}
-   readToken(); {identifier}
+   readToken(symprogram);
+   readToken(identifier);
    {todo: peek and see if there is not an identifier list}
-   readToken(); {left paren}
+   readToken(parenleft);
    identifierList();
-   readToken(); {right paren}
+   readToken(parenright);
 end;
 
 procedure procedureStatement();
 begin
    {todo: handle more than just writeln}
-   readToken(); {identifier}
-   readToken(); {left paren}
-   identifierList();
-   readToken(); {right paren}
+   readToken(identifier);
+   readToken(parenleft);
+   {identifierList();}
+   readToken(characterstring);
+   readToken(parenright);
 end;
 
 procedure statement();
@@ -43,9 +50,9 @@ end;
 
 procedure compoundStatement();
 begin
-   readToken(); {begin}
+   readToken(symbegin);
    statementSequence();
-   readToken(); {end}
+   readToken(symend);
 end;
 
 procedure block();
@@ -57,7 +64,7 @@ end;
 procedure programStart();
 begin
    programHeading();
-   readToken(); {semicolon}
+   readToken(semicolon);
    block();
-   readToken(); {fullstop}
+   readToken(period);
 end;
